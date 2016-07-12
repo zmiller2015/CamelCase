@@ -26,9 +26,19 @@ public class PrisonCell {
 		for (int j = 0; j < releaseNumber; j++){
 
 			int closest = determineClosest(temp, toBeReleased, middle, 100);
-			System.out.println(closest);
+			
+			System.out.println(toBeReleased[closest]);
+			if(j > 0){
+				if(toBeReleased[closest] < max)
+					max = toBeReleased[closest] - 2;
+				else
+					max = toBeReleased[closest] - max - 1;
+			}
 			System.out.println("Bribes: " + max);
-			max = closest - 1;
+			
+			toBeReleased[closest] = 100;
+
+			
 			
 		}
 		/*    A better idea foor how to get this accomplished is to save the index of the highest value so that I can delete it from
@@ -45,13 +55,22 @@ public class PrisonCell {
 		input.close();
 	}//end of main
 	
+	/*  within determine closest we are trying to find the index of the closest number to the middle index
+	 *  The incentive here is that if we know which index is nearest the center then we can use that number next
+	 *  to release and get smaller brides than the remaining indexes.
+	 * 
+	 *  We want to return a pointer to the correct index. the index of the closest index.
+	 * 
+	 * 
+	 */
+	
 	public static int determineClosest(int sizeIndex, int toBeReleased[], int middle, int result){
 		
 		if (sizeIndex < 0) //base case
 			return result;
-		else if (result == 100 || Math.abs(middle - toBeReleased[sizeIndex]) < Math.abs(middle - result))    // if the absolute value of middle - first value then make result else recurse
+		else if (result == 100 || Math.abs(middle - toBeReleased[sizeIndex]) < Math.abs(middle - toBeReleased[result]))    // if the absolute value of middle - first value then make result else recurse
 		{
-			result = determineClosest(--sizeIndex, toBeReleased, middle, toBeReleased[sizeIndex + 1]);
+			result = determineClosest(--sizeIndex, toBeReleased, middle, sizeIndex + 1);
 		}
 		else
 			result = determineClosest(--sizeIndex, toBeReleased, middle, result);
